@@ -39,14 +39,14 @@ public class MainActivity extends AppCompatActivity {
         mTextView = findViewById(R.id.test);
 
 
-        String m_localdatapath = getFilesDir().getPath() + "/test.smi";
+        String m_localdatapath = this.getFilesDir().getPath() + "/test.smi";
         EnjLog.v("m_localdatapath", m_localdatapath);
 
         try {
             File f = new File(m_localdatapath);
             FileInputStream fs = new FileInputStream(f);
 
-            ParseXML(fs);
+            CaptionParse(fs);
 
             fs.close();
 
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         EnjLog.v("자막 길이", captionList.size());
     }
-    void ParseXML(InputStream instream) {
+    void CaptionParse(InputStream instream) {
         String xmlcontent = "", line;
 
         captionList = new ArrayList<>();
