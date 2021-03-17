@@ -2,17 +2,19 @@ package com.enjsoft.smitest;
 
 public class Caption {
 
-    int caption_time = 0;
+    long caption_time = 0;
     String caption_text = "";
 
-    public Caption() {
+    public Caption(long time, String text){
+        caption_text = text;
+        caption_time = time;
     }
 
-    public int getCaption_time() {
+    public long getCaption_time() {
         return caption_time;
     }
 
-    public void setCaption_time(int caption_time) {
+    public void setCaption_time(long caption_time) {
         this.caption_time = caption_time;
     }
 

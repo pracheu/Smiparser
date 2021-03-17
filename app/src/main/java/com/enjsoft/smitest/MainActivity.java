@@ -1,9 +1,25 @@
 package com.enjsoft.smitest;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.ViewCompat;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -12,132 +28,160 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.StringReader;
-import java.net.URL;
-import java.text.SimpleDateFormat;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
-    TextView mTextView;
+    ImageView m_imageView;
+    ArrayList viewList;
 
+    int textCount = 0;
 
-    Caption caption;
-    List<Caption> captionList;
+    Button btnCall;
+
+    Context mContext;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextView = findViewById(R.id.test);
+        mContext = this;
+
+        //m_imageView = (ImageView) findViewById(R.id.test);
+        //m_imageView.setVisibility(View.VISIBLE);
 
 
-        String m_localdatapath = this.getFilesDir().getPath() + "/test.smi";
-        EnjLog.v("m_localdatapath", m_localdatapath);
+        // imageView가 추가될 linearLayout
 
-        try {
-            File f = new File(m_localdatapath);
-            FileInputStream fs = new FileInputStream(f);
-
-            CaptionParse(fs);
-
-            fs.close();
+        final LinearLayout layout = (LinearLayout) findViewById(R.id.testLayout);
 
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        viewList = new ArrayList();
+
+        final ArrayList tempList = new ArrayList();
+        for(int i = 0; i < 100; i ++){
+            tempList.add(i + "");
         }
 
-        EnjLog.v("자막 길이", captionList.size());
-    }
-    void CaptionParse(InputStream instream) {
-        String xmlcontent = "", line;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(textCount < tempList.size()) {
 
-        captionList = new ArrayList<>();
+                    if(textCount == 0){
 
-        try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(instream,  "EUC-KR"));
+                        for(int i = 0; i < 3; i++) {
+                            final TextView tempText = new TextView(mContext);
+                            int viewId = ViewCompat.generateViewId();
+                            tempText.setId(viewId);
+                            viewList.add(viewId);
+                            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            lp.gravity = Gravity.CENTER;
+                            tempText.setLayoutParams(lp);
+                            tempText.setText("-");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    layout.addView(tempText);
+                                }
+                            });
+                        }
 
-            while ((line = rd.readLine()) != null) {
-                xmlcontent += line + "\n";
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-
-            return;
-        }
-
-
-        try {
-
-
-            StringReader sr = new StringReader(xmlcontent);
-            XmlPullParserFactory parserFactory = XmlPullParserFactory.newInstance();
-            XmlPullParser parser = parserFactory.newPullParser();
-
-            parser.setInput(sr);
-
-            String curtag = "";
-
-            while (true) {
-                int etype = parser.getEventType();
-                //   EnjLog.v(tag , "type:" +etype);
-                if (etype == XmlPullParser.END_DOCUMENT)
-                    break;
-                if (etype == XmlPullParser.START_DOCUMENT)
-                    ;
-                else if (etype == XmlPullParser.START_TAG) {
-                    String tagname = parser.getName();
-                    curtag = tagname;
-                    EnjLog.v("start", tagname);
-
-                    if (curtag.equals("SYNC")) {
-                         caption = new Caption();
-
-                        int attcount = parser.getAttributeCount();
-                        for (int i = 0; i < attcount; i++) {
-                            String attname = parser.getAttributeName(i);
-                            String attvalue = parser.getAttributeValue(i);
-
-                            if(attname.equals("Start")){
-                                caption.setCaption_time(Integer.parseInt(attvalue));;
+                        final TextView tempText = new TextView(mContext);
+                        int viewId = ViewCompat.generateViewId();
+                        tempText.setId(viewId);
+                        viewList.add(viewId);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        lp.gravity = Gravity.CENTER;
+                        tempText.setLayoutParams(lp);
+                        tempText.setText(tempList.get(textCount).toString());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                layout.addView(tempText);
                             }
-                            EnjLog.v(attname, attvalue);
-                        }
+                        });
+                    }else {
+                        final TextView tempText = new TextView(mContext);
+                        int viewId = ViewCompat.generateViewId();
+                        tempText.setId(viewId);
+                        viewList.add(viewId);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        lp.gravity = Gravity.CENTER;
+                        tempText.setLayoutParams(lp);
+                        tempText.setText(tempList.get(textCount).toString());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                layout.addView(tempText);
+                            }
+                        });
+                        //TranslateAnimation
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                for(int i = 0 ; i < 4; i++) {
+                                    TextView upTv1 = findViewById((Integer) viewList.get(i));
+
+                                    ObjectAnimator m_objectAnimator = new ObjectAnimator();
+                                    m_objectAnimator.ofFloat(upTv1, "translationY", -upTv1.getHeight()).setDuration(1000).start();
+                                }
+                            }
+                        });
+                        final TextView deleteTextView = findViewById((Integer) viewList.get(0));
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                layout.removeView(deleteTextView);
+                            }
+                        });
+                        viewList.remove(0);
                     }
-                    parser.next();
-                    if(curtag.equals("P")){
-                        String txt = parser.getText();
-                        if(txt == null){
-                            txt = "";
-                        }
-                        caption.setCaption_text(txt);
+                    textCount++;
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    String txt = parser.getText();
-                    EnjLog.v("TAG:", txt);
-                } else if (etype == XmlPullParser.END_TAG) {
-                    String tagname = parser.getName();
-                    if(tagname.equals("SYNC")){
-                        captionList.add(caption);
-                        EnjLog.v("end", caption.toString());
-                    }
-                    curtag = "";
-                } else if (etype == XmlPullParser.TEXT) {
                 }
-                parser.next();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        }).start();
+
+
+
+
+//        ImageView iv = new ImageView(this);  // 새로 추가할 imageView 생성
+//
+//
+//
+//        Paint paint = new Paint();
+//        paint.setStyle(Paint.Style.FILL);
+//        paint.setColor(Color.BLACK);
+//        paint.setTextSize(30);
+//        paint.setTextAlign(Paint.Align.CENTER);
+//
+//        Bitmap bitmap = Bitmap.createBitmap(800, 800, Bitmap.Config.ARGB_8888);
+//        final Canvas canvas = new Canvas(bitmap);
+//        canvas.drawText("안녕하세요오오오옹",bitmap.getWidth()/2 , bitmap.getHeight()/2, paint);
+//
+//
+//        iv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//        iv.setImageBitmap(bitmap);
+//
+//        layout.addView(iv); // 기존 linearLayout에 imageView 추가
+
+
+
+       // ObjectAnimator m_objectAnimator = new ObjectAnimator();
+//        m_objectAnimator.ofFloat(m_imageView, "translationY", -1500f).setDuration(3000).start();
+
     }
 }
