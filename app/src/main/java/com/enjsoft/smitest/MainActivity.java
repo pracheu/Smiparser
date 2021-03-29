@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity  {
                         for(int i = 0; i < 3; i++) {
                             final TextView tempText = new TextView(mContext);
                             int viewId = ViewCompat.generateViewId();
+                            EnjLog.v("upTv1.getText() 1 " , viewId);
                             tempText.setId(viewId);
                             viewList.add(viewId);
                             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity  {
                         int viewId = ViewCompat.generateViewId();
                         tempText.setId(viewId);
                         viewList.add(viewId);
+                        EnjLog.v("upTv1.getText() 2 " , viewId);
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         lp.gravity = Gravity.CENTER;
                         tempText.setLayoutParams(lp);
@@ -109,11 +111,27 @@ public class MainActivity extends AppCompatActivity  {
                                 layout.addView(tempText);
                             }
                         });
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                for(int i = 0 ; i < 4; i++) {
+//                                    TextView upTv1 = findViewById((Integer) viewList.get(i));
+//
+//                                    float tempFloat = upTv1.getTextSize();
+//                                    EnjLog.v("upTv1.getText() 2 " , upTv1.getTextSize());
+//
+//                                    ObjectAnimator m_objectAnimator = new ObjectAnimator();
+//                                    m_objectAnimator.ofFloat(upTv1, "translationY", -tempFloat).setDuration(2000).start();
+//                                }
+//                            }
+//                        });
                     }else {
                         final TextView tempText = new TextView(mContext);
                         int viewId = ViewCompat.generateViewId();
                         tempText.setId(viewId);
                         viewList.add(viewId);
+                        EnjLog.v("upTv1.getText()3 " , viewId);
+                        EnjLog.v("viewList.length " , viewList.size());
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         lp.gravity = Gravity.CENTER;
                         tempText.setLayoutParams(lp);
@@ -131,8 +149,10 @@ public class MainActivity extends AppCompatActivity  {
                                 for(int i = 0 ; i < 4; i++) {
                                     TextView upTv1 = findViewById((Integer) viewList.get(i));
 
+                                    float tempFloat = upTv1.getTextSize();
+
                                     ObjectAnimator m_objectAnimator = new ObjectAnimator();
-                                    m_objectAnimator.ofFloat(upTv1, "translationY", -upTv1.getHeight()).setDuration(1000).start();
+                                    m_objectAnimator.ofFloat(upTv1, "translationY", -tempFloat).setDuration(2000).start();
                                 }
                             }
                         });
@@ -147,7 +167,7 @@ public class MainActivity extends AppCompatActivity  {
                     }
                     textCount++;
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(3000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
